@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="obsidian">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shivang Debnath — Developer. Creator. Innovator.</title>
+<meta name="description" content="Portfolio of Shivang Debnath: developer, creator and innovator. Projects, journey and what he is building next.">
+<meta property="og:title" content="Shivang Debnath — Portfolio">
+<meta property="og:description" content="Developer. Creator. Innovator.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#08080D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080D'/%3E%3Ctext x='32' y='43' font-size='34' text-anchor='middle' fill='%23B9A0E8' font-family='serif'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#home">Skip to content</a>
+<div id="loader" aria-hidden="true"><span id="loadNum">0</span><i></i></div>
+<div id="cursor" aria-hidden="true"><b></b><u></u></div>
+
+<header id="nav">
+  <a class="brand" href="#home">Shivang Debnath</a>
+  <nav aria-label="Primary"><ul id="navLinks"></ul></nav>
+  <div class="nav-r">
+    <button id="themeBtn" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span></span></button>
+    <a class="btn small" href="#contact" data-magnetic>Contact</a>
+    <button id="burger" class="icon-btn burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+  </div>
+</header>
+<div id="menu" aria-hidden="true"><ul id="menuLinks"></ul></div>
+
+<main>
+<section id="home" class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <p class="hero-sub">Developer. Creator. Innovator.</p>
+  <h1 id="heroTitle" aria-label="Shivang Debnath."></h1>
+  <p class="lede" id="heroIntro"></p>
+  <div class="row">
+    <a class="btn" href="#projects" data-magnetic>Explore Projects</a>
+    <a class="btn ghost" href="#journey" data-magnetic>Discover My Journey</a>
+  </div>
+</section>
+
+<section id="about" class="sec">
+  <h2 class="rv">About</h2>
+  <div class="about">
+    <p class="big rv" id="aboutBig"></p>
+    <div class="cols rv" id="aboutCols"></div>
+  </div>
+</section>
+
+<section id="journey" class="sec">
+  <h2 class="rv">Journey</h2>
+  <ol class="timeline" id="timeline"></ol>
+</section>
+
+<section id="projects" class="sec">
+  <h2 class="rv">Project Archive</h2>
+  <div class="filters rv" id="filters" role="group" aria-label="Filter projects"></div>
+  <div class="grid" id="projectGrid"></div>
+</section>
+
+<section id="hobbies" class="sec">
+  <h2 class="rv">Beyond the Screen</h2>
+  <ul class="hobbies" id="hobbyList"></ul>
+</section>
+
+<section id="exploring" class="sec">
+  <div class="head-row"><h2 class="rv">Currently Exploring</h2>
+  <button class="btn ghost small" id="editToggle" aria-pressed="false">Edit modules</button></div>
+  <div class="mods" id="mods"></div>
+  <p class="hint" id="editHint" hidden>Editing is on. Changes save in this browser only. To publish them, copy the text into js/data.js.</p>
+</section>
+
+<section id="contact" class="sec contact">
+  <h2 class="rv">Let’s build what’s next.</h2>
+  <p class="lede rv" id="contactText"></p>
+  <a class="mail rv" id="mailLink" data-magnetic></a>
+  <ul class="socials rv" id="socials"></ul>
+</section>
+</main>
+
+<footer><span id="year"></span> Shivang Debnath. Violet Obsidian.</footer>
+
+<dialog id="case" aria-labelledby="caseTitle"><div class="case-in"></div></dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
