@@ -411,6 +411,43 @@
     @keyframes pixelGlow{0%,100%{opacity:.55}50%{opacity:1}}
     @media (max-width:1023px){.pixel-deco{display:none}}
     @media (prefers-reduced-motion:reduce){.pixel-deco,.pixel-deco::before{animation:none}}
+
+    /* Settings panel */
+    .settings-trigger svg{transition:transform .5s cubic-bezier(.16,1,.3,1)}
+    .settings-trigger:hover svg,.settings-trigger[aria-expanded="true"] svg{transform:rotate(60deg)}
+    .settings-panel{position:fixed;z-index:70;top:84px;right:max(1rem,calc((100vw - 80rem)/2 + 2rem));width:min(340px,calc(100vw - 2rem));
+      background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border-highlight);border-radius:20px;
+      padding:1.1rem 1.2rem 1.2rem;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);max-height:calc(100vh - 110px);overflow:auto}
+    .settings-panel[hidden]{display:none}
+    .settings-panel:not([hidden]){animation:spIn .28s cubic-bezier(.16,1,.3,1)}
+    @keyframes spIn{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+    .sp-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem}
+    .sp-kicker{font:500 .68rem/1 ui-monospace,monospace;letter-spacing:.08em;color:var(--accent-lavender);text-transform:uppercase;margin-bottom:.35rem}
+    .sp-title{font-size:1.35rem;font-weight:700;line-height:1.1}
+    .sp-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-muted);font-size:1.2rem;line-height:1;color:var(--text-secondary)}
+    .sp-close:hover{color:var(--text-primary);border-color:var(--border-highlight)}
+    .sp-group{border-top:1px solid var(--border-muted);padding-top:.9rem;margin-top:.9rem}
+    .sp-label{font:500 .72rem/1 ui-monospace,monospace;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;margin-bottom:.7rem;cursor:default}
+    .sp-tools summary{cursor:pointer;margin-bottom:0;list-style:none}
+    .sp-tools summary::-webkit-details-marker{display:none}
+    .sp-tools summary::after{content:"+";float:right;color:var(--accent-lavender)}
+    .sp-tools[open] summary::after{content:"\2212"}
+    .sp-tools[open] summary{margin-bottom:.7rem}
+    .sp-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.55rem 0}
+    .sp-name{display:block;font-size:.9rem;font-weight:500}
+    .sp-hint{display:block;font-size:.74rem;color:var(--text-muted);margin-top:.15rem;line-height:1.4}
+    .sp-switch{flex:none;position:relative;width:42px;height:24px;border-radius:999px;background:var(--border-muted);border:1px solid var(--border-highlight);transition:background .25s}
+    .sp-switch span{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--text-muted);transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s}
+    .sp-switch[aria-checked="true"]{background:var(--accent-royal)}
+    .sp-switch[aria-checked="true"] span{transform:translateX(18px);background:#E8E4F0}
+    .sp-btns{display:grid;gap:.5rem;margin-bottom:.8rem}
+    .sp-btn{padding:.6rem .9rem;border-radius:12px;font-size:.8rem;text-align:left}
+    body.no-decor .pixel-deco,body.no-decor .chrome-deco{display:none}
+    body.calm .pixel-deco,body.calm .chrome-deco,body.calm .pixel-deco::before,body.calm .chrome-deco::before{animation:none!important}
+    @media (max-width:1023px){
+      .settings-panel{top:auto;right:.75rem;left:.75rem;bottom:.75rem;width:auto;max-height:80vh}
+    }
+    @media (prefers-reduced-motion:reduce){.settings-panel:not([hidden]){animation:none}.settings-trigger svg{transition:none}}
   </style>
 </head>
 <body class="selection:bg-[#352052] selection:text-[#E8E4F0]">
@@ -499,6 +536,7 @@
         <button id="cmd-palette-btn" type="button" class="px-2.5 py-2 rounded-xl btn-outline font-mono text-xs text-sub hover:text-main" title="Quick Jump Menu (Ctrl+K)">
           ⌘K
         </button>
+        <button type="button" class="settings-trigger p-2.5 rounded-xl btn-outline" aria-label="Open settings" aria-expanded="false" aria-controls="settings-panel" title="Settings"><svg class="w-4 h-4 accent-lavender-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       </div>
 
       <!-- Mobile Hamburger & Theme Button -->
@@ -508,6 +546,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
           </svg>
         </button>
+        <button type="button" class="settings-trigger p-2.5 rounded-xl btn-outline" aria-label="Open settings" aria-expanded="false" aria-controls="settings-panel" title="Settings"><svg class="w-4 h-4 accent-lavender-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         <button id="mobile-menu-btn" type="button" class="p-2.5 rounded-xl btn-outline flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Open Navigation Menu" aria-expanded="false">
           <span class="hamburger-line w-5 h-[1.5px] bg-current transition-transform duration-300"></span>
           <span class="hamburger-line w-5 h-[1.5px] bg-current transition-opacity duration-300"></span>
@@ -516,6 +555,41 @@
       </div>
     </div>
   </header>
+  <!-- ==========================================================================
+       SETTINGS PANEL (opened from the gear icon in the navbar)
+       ========================================================================== -->
+  <div id="settings-panel" class="settings-panel" role="dialog" aria-label="Settings" hidden>
+    <div class="sp-head">
+      <div>
+        <p class="sp-kicker">Preferences</p>
+        <h2 class="sp-title">Settings</h2>
+      </div>
+      <button type="button" id="settings-close" class="sp-close" aria-label="Close settings">&times;</button>
+    </div>
+
+    <div class="sp-group">
+      <p class="sp-label">Display</p>
+      <div class="sp-row">
+        <div><span class="sp-name">Floating decorations</span><span class="sp-hint">Pixel characters, stars and glows</span></div>
+        <button type="button" class="sp-switch" role="switch" aria-checked="true" aria-label="Floating decorations" data-setting="decor"><span></span></button>
+      </div>
+      <div class="sp-row">
+        <div><span class="sp-name">Gentle motion</span><span class="sp-hint">Stops floating, spinning and glow pulses</span></div>
+        <button type="button" class="sp-switch" role="switch" aria-checked="false" aria-label="Gentle motion" data-setting="calm"><span></span></button>
+      </div>
+    </div>
+
+    <details class="sp-group sp-tools">
+      <summary class="sp-label">Creator tools</summary>
+      <div class="sp-btns">
+        <button type="button" class="btn-outline sp-btn" data-tool="edit">Turn edit mode on or off</button>
+        <button type="button" class="btn-outline sp-btn" data-tool="export">Download backup file</button>
+        <button type="button" class="btn-outline sp-btn" data-tool="reset">Reset my edits</button>
+      </div>
+      <p class="sp-hint">Edits and screenshots uploaded with the pencil are saved in this browser only.</p>
+    </details>
+  </div>
+
 
   <!-- Mobile Full-Screen Overlay Navigation -->
   <div id="mobile-nav-overlay" class="fixed inset-0 z-40 surface-primary bg-opacity-95 backdrop-blur-2xl hidden flex-col justify-between px-6 pt-28 pb-10">
@@ -2902,6 +2976,7 @@
   var sprites=[].slice.call(document.querySelectorAll('.pixel-deco')), tick=false, mx=0, my=0;
   function update(){
     tick=false;
+    if(document.body.classList.contains('calm')) return;
     sprites.forEach(function(el){
       if(el.offsetParent===null) return;
       var r=el.getBoundingClientRect(), s=parseFloat(getComputedStyle(el).scale)||1;
@@ -2919,6 +2994,44 @@
   document.documentElement.addEventListener('mouseleave',function(){
     sprites.forEach(function(el){el.style.setProperty('--grow',1);el.classList.remove('near');});
   });
+})();
+</script>
+<script>
+/* Settings panel: display options + creator tools (reuses the page's existing edit/backup/reset buttons) */
+(function(){
+  var KEY='shivang_2027_settings_v1', s={decor:true,calm:false};
+  try{ Object.assign(s, JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){}
+  var panel=document.getElementById('settings-panel'); if(!panel) return;
+  var triggers=[].slice.call(document.querySelectorAll('.settings-trigger')), lastTrigger=null;
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+  function apply(){
+    document.body.classList.toggle('no-decor', !s.decor);
+    document.body.classList.toggle('calm', !!s.calm);
+    [].forEach.call(panel.querySelectorAll('[data-setting]'), function(b){ b.setAttribute('aria-checked', String(!!s[b.dataset.setting])); });
+    if(s.calm) [].forEach.call(document.querySelectorAll('.pixel-deco'), function(el){ el.style.setProperty('--grow',1); el.classList.remove('near'); });
+  }
+  function setOpen(open, trigger){
+    panel.hidden=!open;
+    triggers.forEach(function(t){ t.setAttribute('aria-expanded', String(open && t===trigger)); });
+    if(open){ lastTrigger=trigger; var f=panel.querySelector('.sp-switch'); if(f) f.focus(); }
+    else if(lastTrigger){ lastTrigger.focus(); }
+  }
+  triggers.forEach(function(t){ t.addEventListener('click', function(e){ e.stopPropagation(); setOpen(panel.hidden, t); }); });
+  document.getElementById('settings-close').addEventListener('click', function(){ setOpen(false); });
+  document.addEventListener('click', function(e){ if(!panel.hidden && !panel.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !panel.hidden) setOpen(false); });
+  [].forEach.call(panel.querySelectorAll('[data-setting]'), function(b){
+    b.addEventListener('click', function(){ s[b.dataset.setting]=!s[b.dataset.setting]; save(); apply(); });
+  });
+  [].forEach.call(panel.querySelectorAll('[data-tool]'), function(b){
+    b.addEventListener('click', function(){
+      var map={edit:'toggle-edit-btn',export:'export-portfolio-btn',reset:'reset-portfolio-btn'}, tool=b.dataset.tool;
+      if(tool==='reset' && !confirm('Reset all your saved text, project and screenshot edits in this browser?')) return;
+      var target=document.getElementById(map[tool]); if(target) target.click();
+      if(tool==='edit') setOpen(false);
+    });
+  });
+  apply();
 })();
 </script>
 </body>
