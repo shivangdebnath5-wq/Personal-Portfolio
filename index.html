@@ -685,6 +685,15 @@
        (2) add ONE entry to IDENT below. Nothing else needs to change.
        ========================================================================== -->
   <style id="theme-identities-base">
+    /* Name glow — follows each theme's own accent colours (no per-theme colour needed) */
+    .name-glow{text-shadow:0 0 .32em rgb(var(--tk-lav) / .5),0 0 .9em rgb(var(--tk-royal) / .65);animation:tidNameGlow 5s ease-in-out infinite alternate}
+    h1.name-glow{text-shadow:0 0 .28em rgb(var(--tk-lav) / .45),0 0 .85em rgb(var(--tk-royal) / .7),0 0 1.8em rgb(var(--tk-royal) / .35)}
+    html[data-theme="mono"] .name-glow{text-shadow:0 0 .4em rgb(var(--tk-royal) / .22),0 0 1em rgb(var(--tk-lav) / .25)}
+    html[data-theme="pixel"] .name-glow{text-shadow:2px 2px 0 rgb(var(--tk-royal)),0 0 .7em rgb(var(--tk-lav) / .55)}
+    html[data-theme="neon"] .name-glow{text-shadow:0 0 .22em rgb(var(--tk-royal) / .9),0 0 .8em rgb(var(--tk-royal) / .7),0 0 1.6em rgb(var(--tk-lav) / .45)}
+    @keyframes tidNameGlow{from{filter:brightness(1)}to{filter:brightness(1.12)}}
+    @media (prefers-reduced-motion:reduce){.name-glow{animation:none}}
+    body.calm .name-glow{animation:none}
     @keyframes tidGlitch{0%,100%{text-shadow:none}25%{text-shadow:2px 0 var(--accent-royal),-2px 0 var(--accent-lavender)}55%{text-shadow:-2px 0 var(--accent-royal),2px 0 var(--accent-lavender)}}
     @keyframes tidDrift{0%{background-position:0% 0,100% 0,0 0}100%{background-position:100% 0,0% 0,0 0}}
   </style>
@@ -1014,7 +1023,7 @@
        ========================================================================== -->
   <div id="page-loader" role="status" aria-label="Loading Shivang Debnath Portfolio">
     <div class="flex items-center justify-between text-xs font-mono tracking-wider text-softSilver/60">
-      <span>Shivang Debnath</span>
+      <span class="name-glow">Shivang Debnath</span>
       <span id="loader-percent">0%</span>
     </div>
     <div class="my-auto max-w-2xl">
@@ -1045,7 +1054,7 @@
           <span class="relative font-display font-bold text-sm tracking-wider text-softSilver">SD</span>
         </div>
         <div class="flex flex-col">
-          <span class="font-display font-bold text-sm tracking-tight text-main leading-none">Shivang Debnath</span>
+          <span class="name-glow font-display font-bold text-sm tracking-tight text-main leading-none">Shivang Debnath</span>
           <span class="font-mono text-[11px] text-mute mt-1">Portfolio 2027</span>
         </div>
       </a>
@@ -1233,7 +1242,7 @@
               <p class="hero-reveal font-serif italic text-2xl sm:text-3xl accent-lavender-text mb-2" data-editable="hero-greeting">
                 Hi, I'm
               </p>
-              <h1 class="hero-title font-display font-extrabold text-5xl sm:text-7xl lg:text-[5.4rem] tracking-tight text-main leading-[1.02]" data-editable="hero-name">
+              <h1 class="name-glow hero-title font-display font-extrabold text-5xl sm:text-7xl lg:text-[5.4rem] tracking-tight text-main leading-[1.02]" data-editable="hero-name">
                 Shivang Debnath.
               </h1>
             </div>
@@ -1867,7 +1876,7 @@
         <footer class="mt-24 pt-10 border-t border-subtle flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs font-mono text-mute">
           <div class="space-y-1.5">
             <div class="flex flex-wrap items-center gap-3">
-              <span class="text-main font-display font-bold text-sm">© 2027 Shivang Debnath</span>
+              <span class="name-glow text-main font-display font-bold text-sm">© 2027 Shivang Debnath</span>
               <span>•</span>
               <span data-editable="footer-note">Personal Student Portfolio</span>
             </div>
