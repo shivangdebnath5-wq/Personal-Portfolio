@@ -448,6 +448,81 @@
       .settings-panel{top:auto;right:.75rem;left:.75rem;bottom:.75rem;width:auto;max-height:80vh}
     }
     @media (prefers-reduced-motion:reduce){.settings-panel:not([hidden]){animation:none}.settings-trigger svg{transition:none}}
+
+    /* Favourite Reads: bookshelf */
+    .reads-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem}
+    .reads-chip{padding:.5rem 1rem;border-radius:999px;border:1px solid var(--border-muted);font:500 .78rem/1 ui-monospace,monospace;color:var(--text-secondary);background:transparent;transition:all .25s}
+    .reads-chip:hover{border-color:var(--border-highlight);color:var(--text-primary)}
+    .reads-chip[aria-pressed="true"]{background:var(--accent-royal);border-color:var(--border-highlight);color:#E8E4F0}
+    .reads-chip small{opacity:.65;margin-left:.35rem;font-size:.72rem}
+    .reads-shelf-wrap{padding:2rem 1.25rem 1.5rem;border:1px solid var(--border-muted);border-radius:24px;background:linear-gradient(180deg,rgba(53,32,82,.16),transparent 55%),var(--bg-secondary)}
+    .reads-shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2.25rem 1.5rem;list-style:none;margin:0;padding:0;perspective:1100px}
+    .reads-empty{text-align:center;color:var(--text-muted);padding:2rem 0;font-style:italic}
+    .book{transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+    .reads-ready .book:not(.in){opacity:0;transform:translateY(18px)}
+    .book[hidden]{display:none}
+    .book-btn{display:block;width:100%;text-align:left;background:none;border:0;padding:0;color:inherit;cursor:pointer;border-radius:10px}
+    .book-btn:focus-visible{outline:2px solid var(--accent-lavender);outline-offset:6px}
+    .book-scene{display:block;perspective:900px;padding-bottom:.35rem}
+    .book-cover,.bm-cover{--rx:0deg;--ry:0deg;--mx:50%;--my:30%;position:relative;display:block;aspect-ratio:2/3;border-radius:3px 9px 9px 3px;overflow:hidden;
+      background:linear-gradient(145deg,var(--c1,#352052),var(--c2,#171321));border:1px solid rgba(185,160,232,.22);
+      transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;
+      box-shadow:0 14px 22px -14px rgba(0,0,0,.65),-3px 0 0 rgba(0,0,0,.25) inset;
+      transition:transform .35s cubic-bezier(.16,1,.3,1),translate .45s cubic-bezier(.16,1,.3,1),box-shadow .45s ease}
+    .book-cover img,.bm-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .book-cover::before,.bm-cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:9%;z-index:2;background:linear-gradient(90deg,rgba(0,0,0,.45),rgba(255,255,255,.07) 55%,transparent)}
+    .book-cover::after,.bm-cover::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.22),transparent 55%)}
+    .book-btn:hover .book-cover,.book-btn:focus-visible .book-cover{translate:0 -14px;box-shadow:0 30px 34px -18px rgba(0,0,0,.8),0 0 28px -6px rgba(185,160,232,.4)}
+    .book-btn:hover .book-cover::after{opacity:1}
+    .bk-art{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:space-between;padding:1.1rem .9rem .9rem 1.2rem;color:#E8E4F0}
+    .bk-art b{font:italic 400 clamp(.95rem,2.2vw,1.2rem)/1.15 var(--font-serif,Georgia,serif);display:block;word-break:break-word}
+    .bk-art i{font:500 .62rem/1.3 ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;opacity:.75;font-style:normal;display:block}
+    .bk-art span{display:block;width:34px;height:1px;background:rgba(185,160,232,.7);margin:.7rem 0 0}
+    .book-ledge{display:block;height:7px;margin:0 -.75rem .8rem;border-radius:3px;background:linear-gradient(180deg,rgba(185,160,232,.3),rgba(53,32,82,.55));box-shadow:0 6px 10px -4px rgba(0,0,0,.55)}
+    .book-title{display:block;font-weight:600;font-size:.92rem;line-height:1.3;color:var(--text-primary)}
+    .book-author{display:block;font-size:.78rem;color:var(--text-muted);margin-top:.15rem}
+    .book-status{display:inline-flex;align-items:center;gap:.4rem;margin-top:.5rem;font:500 .66rem/1 ui-monospace,monospace;letter-spacing:.04em;color:var(--text-secondary)}
+    .book-status i,.bm-status i{width:7px;height:7px;border-radius:50%;background:var(--accent-lavender);display:inline-block}
+    .st-reading i{box-shadow:0 0 0 3px rgba(185,160,232,.25)}
+    .st-finished i{background:#7fd3a0}
+    .st-want i{background:transparent;border:1.5px solid var(--accent-lavender)}
+    /* detail panel */
+    .book-modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:1rem}
+    .book-modal[hidden]{display:none}
+    .bm-backdrop{position:absolute;inset:0;background:rgba(5,5,9,.78);backdrop-filter:blur(10px)}
+    .bm-panel{position:relative;width:min(860px,100%);max-height:92vh;overflow:auto;display:grid;grid-template-columns:minmax(0,260px) 1fr;gap:2rem;padding:2rem;
+      background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border-highlight);border-radius:24px;box-shadow:0 40px 90px -30px rgba(0,0,0,.8);animation:bmIn .4s cubic-bezier(.16,1,.3,1)}
+    @keyframes bmIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+    .bm-close{position:absolute;top:.9rem;right:.9rem;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-muted);font-size:1.3rem;line-height:1;color:var(--text-secondary);background:transparent;z-index:5}
+    .bm-close:hover{color:var(--text-primary);border-color:var(--border-highlight)}
+    .bm-cover-wrap{perspective:900px;align-self:start}
+    .bm-cover{--rx:0deg;--ry:-8deg;transform:rotateY(-8deg);box-shadow:0 30px 40px -20px rgba(0,0,0,.75),0 0 40px -10px rgba(185,160,232,.35)}
+    .bm-status{display:inline-flex;align-items:center;gap:.45rem;font:500 .72rem/1 ui-monospace,monospace;letter-spacing:.05em;color:var(--accent-lavender);padding:.4rem .8rem;border:1px solid var(--border-highlight);border-radius:999px}
+    .bm-title{font-family:var(--font-display,inherit);font-weight:700;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.1;margin:.9rem 0 .3rem}
+    .bm-author{font-style:italic;font-size:1.05rem;color:var(--text-secondary)}
+    .bm-rating{margin:.9rem 0 1.2rem;font-size:1.15rem;letter-spacing:.15em;color:var(--accent-lavender)}
+    .bm-rating small{letter-spacing:0;font:500 .78rem ui-monospace,monospace;color:var(--text-muted);margin-left:.6rem}
+    .bm-rating .off{opacity:.25}
+    .bm-block{margin-top:1.1rem}
+    .bm-block h4{font:500 .72rem/1 ui-monospace,monospace;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem}
+    .bm-block p{color:var(--text-secondary);line-height:1.7;font-size:.95rem;white-space:pre-line}
+    @media (max-width:700px){
+      .reads-shelf{grid-template-columns:repeat(2,1fr);gap:2rem 1rem}
+      .bm-panel{grid-template-columns:1fr;gap:1.2rem;padding:1.4rem}
+      .bm-cover-wrap{width:min(190px,55%);margin:.4rem auto 0}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .book,.book-cover,.bm-panel{transition:none!important;animation:none!important}
+      .reads-ready .book:not(.in){opacity:1;transform:none}
+      .book-btn:hover .book-cover{translate:none}
+    }
+    /* keep the 7 nav links comfortable on mid-size laptops */
+    @media (min-width:1024px) and (max-width:1279px){
+      #main-nav nav[aria-label="Primary Navigation"]{gap:.9rem}
+      #main-nav .nav-link{font-size:.7rem}
+      #main-nav .nav-shell{padding-left:1rem;padding-right:1rem}
+      #toggle-edit-btn{padding-left:.6rem;padding-right:.6rem}
+    }
   </style>
 </head>
 <body class="selection:bg-[#352052] selection:text-[#E8E4F0]">
@@ -507,6 +582,7 @@
         <a href="#journey" class="nav-link" data-section="journey">My Journey</a>
         <a href="#projects" class="nav-link" data-section="projects">My Projects</a>
         <a href="#interests" class="nav-link" data-section="interests">My Interests</a>
+        <a href="#reads" class="nav-link" data-section="reads">My Reads</a>
         <a href="#learning" class="nav-link" data-section="learning">What I'm Learning</a>
       </nav>
 
@@ -558,6 +634,23 @@
   <!-- ==========================================================================
        SETTINGS PANEL (opened from the gear icon in the navbar)
        ========================================================================== -->
+    <!-- Book details panel -->
+  <div id="book-modal" class="book-modal" hidden role="dialog" aria-modal="true" aria-labelledby="bm-title">
+    <div class="bm-backdrop" data-close></div>
+    <div class="bm-panel">
+      <button type="button" class="bm-close" data-close aria-label="Close book details">&times;</button>
+      <div class="bm-cover-wrap"><div id="bm-cover" class="bm-cover"></div></div>
+      <div class="bm-body">
+        <span id="bm-status" class="bm-status"></span>
+        <h3 id="bm-title" class="bm-title"></h3>
+        <p id="bm-author" class="bm-author"></p>
+        <div id="bm-rating" class="bm-rating"></div>
+        <div class="bm-block"><h4>About this book</h4><p id="bm-desc"></p></div>
+        <div class="bm-block"><h4>My thoughts</h4><p id="bm-thoughts"></p></div>
+      </div>
+    </div>
+  </div>
+
   <div id="settings-panel" class="settings-panel" role="dialog" aria-label="Settings" hidden>
     <div class="sp-head">
       <div>
@@ -610,8 +703,11 @@
       <a href="#interests" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
         <span>My Interests</span><span class="font-mono text-xs text-mute">05</span>
       </a>
+      <a href="#reads" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
+        <span>My Reads</span><span class="font-mono text-xs text-mute">06</span>
+      </a>
       <a href="#learning" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
-        <span>What I'm Learning</span><span class="font-mono text-xs text-mute">06</span>
+        <span>What I'm Learning</span><span class="font-mono text-xs text-mute">07</span>
       </a>
     </div>
 
@@ -1175,6 +1271,33 @@
 
     <div class="editorial-divider"></div>
 
+        <!-- ==========================================================================
+         SECTION: MY FAVOURITE READS (bookshelf). To add or change books, edit the BOOKS list
+         in the "Favourite Reads" script near the end of this file.
+         ========================================================================== -->
+    <section id="reads" class="py-24 sm:py-32 px-4 sm:px-8 relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
+          <div>
+            <p class="font-mono text-xs accent-lavender-text mb-2">05 • My Favourite Reads</p>
+            <h2 class="font-display font-bold text-3xl sm:text-5xl text-main tracking-tight">Books On My Shelf.</h2>
+          </div>
+          <p class="text-sub text-sm sm:text-base max-w-lg" data-editable="reads-intro">
+            A little corner for the books I'm reading, the ones I've finished and the ones I'm saving for later. Click any cover to see what I think about it.
+          </p>
+        </div>
+
+        <div id="reads-filters" class="reads-filters" role="group" aria-label="Filter books by reading status"></div>
+
+        <div class="reads-shelf-wrap">
+          <ul id="reads-shelf" class="reads-shelf" aria-live="polite"></ul>
+          <p id="reads-empty" class="reads-empty" hidden>Nothing on this shelf yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="editorial-divider"></div>
+
     <!-- ==========================================================================
          SECTION 6: WHAT I'M LEARNING — STUDENT LEARNING NOTEBOOK
          ========================================================================== -->
@@ -1184,7 +1307,7 @@
         
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
           <div>
-            <p class="font-mono text-xs accent-lavender-text mb-2">05 • What I'm Learning</p>
+            <p class="font-mono text-xs accent-lavender-text mb-2">06 • What I'm Learning</p>
             <h2 class="font-display font-bold text-3xl sm:text-5xl text-main tracking-tight">
               Current Projects &amp; Practice.
             </h2>
@@ -2878,6 +3001,7 @@
             { label: 'Go to My Journey', action: () => { location.hash = '#journey'; } },
             { label: 'Go to My Projects', action: () => { location.hash = '#projects'; } },
             { label: 'Go to My Interests (Technology, Design & Music)', action: () => { location.hash = '#interests'; } },
+            { label: 'Go to My Favourite Reads', action: () => { location.hash = '#reads'; } },
             { label: "Go to What I'm Learning", action: () => { location.hash = '#learning'; } },
             { label: 'Switch Theme (Dark / Light)', action: toggleTheme },
             { label: 'Toggle Edit Text Mode (Shortcut: E)', action: toggleEditMode },
@@ -3032,6 +3156,165 @@
     });
   });
   apply();
+})();
+</script>
+<script>
+/* ==========================================================================
+   FAVOURITE READS
+   To add a book: copy one { ... } block in BOOKS, paste it below the last one and edit it.
+     status : 'reading'  = Currently Reading
+              'finished' = Finished
+              'want'     = Want to Read
+     rating : 1 to 5 (use null if you haven't rated it yet)
+     cover  : optional image path, e.g. 'assets/img/books/my-book.jpg'.
+              Leave '' and a clean cover is drawn from the title and author.
+     color  : optional two cover colours, e.g. ['#352052', '#171321'].
+   ========================================================================== */
+(function(){
+  var BOOKS = [
+    { title: 'Add your book title', author: 'Author name', status: 'reading', rating: null, cover: '', color: null,
+      description: 'Add a short description of what this book is about.',
+      thoughts: 'Add your own thoughts: what you like so far, and what made you pick it up.' },
+    { title: 'Another book title', author: 'Author name', status: 'finished', rating: null, cover: '', color: null,
+      description: 'Add a short description of what this book is about.',
+      thoughts: 'Add your own thoughts: what stayed with you, what you would change, and who you would recommend it to.' },
+    { title: 'A third book title', author: 'Author name', status: 'finished', rating: null, cover: '', color: null,
+      description: 'Add a short description of what this book is about.',
+      thoughts: 'Add your own thoughts about it.' },
+    { title: 'Book I want to read', author: 'Author name', status: 'want', rating: null, cover: '', color: null,
+      description: 'Add a short description of what this book is about.',
+      thoughts: 'Add why this one is on your list.' }
+  ];
+
+  var STATUS = {
+    reading:  { label: 'Currently Reading' },
+    finished: { label: 'Finished' },
+    want:     { label: 'Want to Read' }
+  };
+  var PALETTES = [['#352052','#171321'],['#4a2c6e','#1d1530'],['#2a1d44','#0e0b16'],['#5a3a86','#241838'],['#3b2a63','#120d1f']];
+
+  var shelf=document.getElementById('reads-shelf'), filtersEl=document.getElementById('reads-filters'),
+      emptyEl=document.getElementById('reads-empty'), modal=document.getElementById('book-modal');
+  if(!shelf||!filtersEl||!modal) return;
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var active='all', lastFocus=null;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function colors(b,i){ var c=b.color&&b.color.length>1?b.color:PALETTES[i%PALETTES.length]; return '--c1:'+c[0]+';--c2:'+c[1]; }
+  function coverInner(b){
+    if(b.cover) return '<img src="'+esc(b.cover)+'" alt="" loading="lazy">';
+    return '<span class="bk-art"><span><b>'+esc(b.title)+'</b><span></span></span><i>'+esc(b.author)+'</i></span>';
+  }
+  function statusLabel(b){ return (STATUS[b.status]||STATUS.want).label; }
+
+  function renderFilters(){
+    var counts={all:BOOKS.length}; Object.keys(STATUS).forEach(function(k){counts[k]=BOOKS.filter(function(b){return b.status===k;}).length;});
+    var items=[['all','All']].concat(Object.keys(STATUS).map(function(k){return [k,STATUS[k].label];}));
+    filtersEl.innerHTML=items.map(function(it){
+      return '<button type="button" class="reads-chip" data-filter="'+it[0]+'" aria-pressed="'+(it[0]===active)+'">'+it[1]+'<small>'+counts[it[0]]+'</small></button>';
+    }).join('');
+  }
+
+  function renderShelf(){
+    shelf.innerHTML=BOOKS.map(function(b,i){
+      var st=STATUS[b.status]?b.status:'want';
+      return '<li class="book" data-status="'+st+'" data-index="'+i+'">'+
+        '<button type="button" class="book-btn" aria-haspopup="dialog" aria-label="Open details for '+esc(b.title)+' by '+esc(b.author)+'">'+
+          '<span class="book-scene"><span class="book-cover" style="'+colors(b,i)+'">'+coverInner(b)+'</span></span>'+
+          '<span class="book-ledge" aria-hidden="true"></span>'+
+          '<span class="book-title">'+esc(b.title)+'</span>'+
+          '<span class="book-author">'+esc(b.author)+'</span>'+
+          '<span class="book-status st-'+st+'"><i></i>'+statusLabel(b)+'</span>'+
+        '</button></li>';
+    }).join('');
+    applyFilter();
+    bindTilt();
+    reveal();
+  }
+
+  function applyFilter(){
+    var shown=0;
+    [].forEach.call(shelf.children,function(li){
+      var show=active==='all'||li.dataset.status===active; li.hidden=!show; if(show) shown++;
+    });
+    emptyEl.hidden=shown>0;
+    if(!shown) emptyEl.textContent='Nothing on this shelf yet.';
+  }
+
+  function reveal(){
+    var items=[].slice.call(shelf.children);
+    if(reduce||!('IntersectionObserver' in window)){ items.forEach(function(li){li.classList.add('in');}); return; }
+    shelf.parentNode.classList.add('reads-ready');
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ var li=e.target; setTimeout(function(){li.classList.add('in');}, (+li.dataset.index%6)*70); io.unobserve(li);} });
+    },{threshold:.15});
+    items.forEach(function(li){io.observe(li);});
+  }
+
+  function bindTilt(){
+    if(!fine||reduce) return;
+    [].forEach.call(shelf.querySelectorAll('.book-btn'),function(btn){
+      var cover=btn.querySelector('.book-cover');
+      btn.addEventListener('pointermove',function(e){
+        if(document.body.classList.contains('calm')) return;
+        var r=cover.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+        cover.style.setProperty('--ry',((x-.5)*16).toFixed(2)+'deg');
+        cover.style.setProperty('--rx',((.5-y)*14).toFixed(2)+'deg');
+        cover.style.setProperty('--mx',(x*100).toFixed(0)+'%');
+        cover.style.setProperty('--my',(y*100).toFixed(0)+'%');
+      });
+      btn.addEventListener('pointerleave',function(){ cover.style.setProperty('--rx','0deg'); cover.style.setProperty('--ry','0deg'); });
+    });
+  }
+
+  filtersEl.addEventListener('click',function(e){
+    var b=e.target.closest('[data-filter]'); if(!b) return;
+    active=b.dataset.filter;
+    [].forEach.call(filtersEl.children,function(c){c.setAttribute('aria-pressed',String(c===b));});
+    applyFilter();
+  });
+
+  /* detail panel */
+  function stars(n){
+    if(!n) return '<small>Not rated yet</small>';
+    var out=''; for(var i=1;i<=5;i++) out+='<span class="'+(i<=n?'':'off')+'">&#9733;</span>';
+    return '<span role="img" aria-label="'+n+' out of 5 stars">'+out+'</span><small>'+n+' / 5</small>';
+  }
+  function openBook(i,trigger){
+    var b=BOOKS[i]; if(!b) return;
+    var st=STATUS[b.status]?b.status:'want';
+    var cover=document.getElementById('bm-cover');
+    cover.setAttribute('style',colors(b,i)); cover.innerHTML=coverInner(b);
+    var s=document.getElementById('bm-status'); s.className='bm-status st-'+st; s.innerHTML='<i></i>'+statusLabel(b);
+    document.getElementById('bm-title').textContent=b.title;
+    document.getElementById('bm-author').textContent='by '+b.author;
+    document.getElementById('bm-rating').innerHTML=stars(b.rating);
+    document.getElementById('bm-desc').textContent=b.description||'';
+    document.getElementById('bm-thoughts').textContent=b.thoughts||'';
+    lastFocus=trigger; modal.hidden=false; document.body.style.overflow='hidden';
+    modal.querySelector('.bm-close').focus();
+  }
+  function closeBook(){
+    modal.hidden=true; document.body.style.overflow='';
+    if(lastFocus&&document.contains(lastFocus)) lastFocus.focus();
+  }
+  shelf.addEventListener('click',function(e){
+    var btn=e.target.closest('.book-btn'); if(!btn) return;
+    openBook(+btn.parentNode.dataset.index, btn);
+  });
+  modal.addEventListener('click',function(e){ if(e.target.hasAttribute('data-close')) closeBook(); });
+  document.addEventListener('keydown',function(e){
+    if(modal.hidden) return;
+    if(e.key==='Escape') closeBook();
+    if(e.key==='Tab'){ /* keep focus inside the panel */
+      var f=modal.querySelectorAll('button'); if(!f.length) return;
+      if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}
+      else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}
+    }
+  });
+
+  renderFilters(); renderShelf();
 })();
 </script>
 </body>
