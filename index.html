@@ -677,6 +677,328 @@
 })();
 
   </script>
+  <!-- ==========================================================================
+       THEME IDENTITIES — visual identity layer on top of the colour registry.
+       The registry above owns the five HEX colours; this block owns everything
+       else a theme changes: fonts, textures, ornaments, cards, buttons, hovers.
+       To add a theme: (1) add its colours to THEMES in the registry,
+       (2) add ONE entry to IDENT below. Nothing else needs to change.
+       ========================================================================== -->
+  <style id="theme-identities-base">
+    @keyframes tidGlitch{0%,100%{text-shadow:none}25%{text-shadow:2px 0 var(--accent-royal),-2px 0 var(--accent-lavender)}55%{text-shadow:-2px 0 var(--accent-royal),2px 0 var(--accent-lavender)}}
+    @keyframes tidDrift{0%{background-position:0% 0,100% 0,0 0}100%{background-position:100% 0,0% 0,0 0}}
+  </style>
+  <script id="theme-identities">
+(function () {
+  var T = window.PortfolioThemes;
+  if (!T || typeof document === 'undefined') return;
+
+  /* ---------- helpers ---------- */
+  var al = function (h, a) { var c = T.rgb(h); return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; };
+  var F = function (n, fb) { return '"' + n + '",' + (fb || 'sans-serif'); };
+  var SF = 'serif';
+  var RG = function (s, c) { return 'radial-gradient(' + s + ',' + c + ',transparent 70%)'; };
+  function U(w, h, b) {
+    return 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' + b + '</svg>') + '")';
+  }
+  /* art drawn for the top-right corner; n=2 adds bottom-left, n=4 adds top-left + bottom-right */
+  function corners(b, s, n) {
+    var pos = ['top right', 'bottom left', 'top left', 'bottom right'], deg = [0, 180, 270, 90], out = [];
+    for (var i = 0; i < (n || 2); i++) {
+      out.push(U(s, s, '<g transform="rotate(' + deg[i] + ' ' + s / 2 + ' ' + s / 2 + ')">' + b + '</g>') + ' ' + pos[i] + '/' + s + 'px ' + s + 'px no-repeat');
+    }
+    return out.join(',');
+  }
+  function px(rows, c, s) {
+    var o = '';
+    rows.forEach(function (r, j) { for (var i = 0; i < r.length; i++) if (r[i] === 'X') o += '<rect x="' + i * s + '" y="' + j * s + '" width="' + s + '" height="' + s + '" fill="' + c + '"/>'; });
+    return o;
+  }
+  function flower(cx, cy, r) {
+    var o = '';
+    for (var i = 0; i < 5; i++) o += '<ellipse cx="' + cx + '" cy="' + (cy - r) + '" rx="' + r * 0.55 + '" ry="' + r + '" transform="rotate(' + i * 72 + ' ' + cx + ' ' + cy + ')"/>';
+    return o + '<circle cx="' + cx + '" cy="' + cy + '" r="' + r * 0.28 + '"/>';
+  }
+  function stars(p) {
+    var o = '', s = 7, x, y;
+    for (var i = 0; i < 22; i++) {
+      s = (s * 9301 + 49297) % 233280; x = s % 300;
+      s = (s * 9301 + 49297) % 233280; y = s % 300;
+      o += '<circle cx="' + x + '" cy="' + y + '" r="' + (i % 5 ? 0.8 : 1.5) + '" fill="' + (i % 4 ? p.tx : p.sc) + '" fill-opacity="' + (i % 5 ? 0.35 : 0.6) + '"/>';
+    }
+    return o;
+  }
+  var CLIP = function (n) { return 'polygon(0 0,calc(100% - ' + n + 'px) 0,100% ' + n + 'px,100% 100%,' + n + 'px 100%,0 calc(100% - ' + n + 'px))'; };
+
+  /* ---------- identity registry ----------
+     gf  Google Fonts families (| separated)   h/b/s/l  heading / body / editorial / label font stacks
+     it  font-style used by .italic            fw  forced heading weight (single-weight fonts)
+     atm fixed background gradients (array)    tex tiling texture (+ ts size)    deco fixed corner ornaments
+     r/rs/nr  card / chip / nav radius         bc card border colour    sh card shadow    hv card hover css
+     cbg/cbf  card glass fill / blur           ci/cs/cp card background image / size / position
+     br/bx/bh/bb  button radius / base / hover / background      dv/dc  divider css / ornament glyph
+     gr  grain opacity   cur cursor radius   pv picker label css   x  extra css (& = theme root, @C = cards) */
+  var IDENT = {
+    eclipse: function (p) { return {
+      gf: 'Syne:wght@600;700;800|Plus+Jakarta+Sans:wght@300;400;500;600;700', h: F('Syne'), b: F('Plus Jakarta Sans'), it: 'normal', gr: 0.075,
+      atm: [RG('ellipse 70% 40% at 85% -5%', al(p.pr, 0.24)), RG('ellipse 50% 30% at 0% 100%', al(p.sc, 0.07))],
+      deco: corners('<g fill="none" stroke="' + p.sc + '" stroke-opacity=".5"><circle cx="150" cy="56" r="46"/><circle cx="170" cy="46" r="46" stroke="' + p.pr + '" stroke-opacity=".9"/><circle cx="150" cy="56" r="80" stroke-opacity=".2"/><path d="M0 56h60M150 150v60" stroke-opacity=".25"/></g>', 210),
+      r: '18px', bc: al(p.sc, 0.26), sh: '0 24px 50px -30px ' + al(p.pr, 0.8),
+      hv: 'border-color:' + al(p.sc, 0.6) + ';box-shadow:0 0 0 1px ' + al(p.pr, 0.6) + ',0 26px 50px -26px ' + al(p.pr, 0.9),
+      br: '999px', bx: 'box-shadow:0 0 0 1px ' + al(p.pr, 0.45), bh: 'box-shadow:0 0 0 5px ' + al(p.pr, 0.25),
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,' + al(p.sc, 0.5) + ',transparent)',
+      x: '@C{outline:1px solid ' + al(p.sc, 0.2) + ';outline-offset:-8px}@C:hover{outline-color:' + al(p.sc, 0.5) + ';outline-offset:-5px}& h1,& h2{letter-spacing:-.025em}'
+    }; },
+
+    midnight: function (p) { return {
+      gf: 'Sora:wght@400;500;600;700|Inter:wght@400;500;600;700', h: F('Sora'), b: F('Inter'), it: 'normal',
+      atm: ['linear-gradient(180deg,' + al(p.pr, 0.14) + ',transparent 38%)'],
+      tex: U(240, 240, '<path d="M30 40L90 70L150 30L200 90L120 140L60 190M120 140L190 200M90 70L120 140" fill="none" stroke="' + p.sc + '" stroke-opacity=".2"/><g fill="' + p.tx + '" fill-opacity=".5"><circle cx="30" cy="40" r="1.8"/><circle cx="90" cy="70" r="2.4"/><circle cx="150" cy="30" r="1.6"/><circle cx="200" cy="90" r="2"/><circle cx="120" cy="140" r="2.6"/><circle cx="60" cy="190" r="1.8"/><circle cx="190" cy="200" r="1.6"/></g>'), ts: '240px 240px',
+      deco: corners('<g fill="none" stroke="#C9D6EA" stroke-opacity=".32"><path d="M0 210A210 210 0 0 1 210 0"/><path d="M0 170A170 170 0 0 1 170 0" stroke-opacity=".2"/></g><g fill="' + p.tx + '" fill-opacity=".6"><circle cx="150" cy="60" r="2.4"/><circle cx="120" cy="100" r="1.6"/><circle cx="176" cy="104" r="1.8"/></g>', 220),
+      r: '14px', bc: 'rgba(201,214,234,.28)', cbg: al(p.sf, 0.62), cbf: 'blur(14px) saturate(130%)',
+      sh: 'inset 0 1px 0 rgba(255,255,255,.07),0 22px 44px -30px rgba(0,0,0,.8)',
+      hv: 'border-color:rgba(201,214,234,.6);translate:0 -3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 26px 46px -26px ' + al(p.pr, 0.7),
+      br: '10px', bx: 'border-color:rgba(201,214,234,.32)', bh: 'border-color:rgba(201,214,234,.8);translate:0 -1px',
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,rgba(201,214,234,.4),transparent)', dc: '✦'
+    }; },
+
+    emerald: function (p) { return {
+      gf: 'DM+Serif+Display:ital@0;1|Manrope:wght@400;500;600;700;800', h: F('DM Serif Display', SF), b: F('Manrope'), it: 'italic', fw: 400,
+      atm: [RG('ellipse 60% 35% at 100% 0%', al(p.pr, 0.2)), 'linear-gradient(0deg,' + al(p.sc, 0.05) + ',transparent 25%)'],
+      tex: U(120, 120, '<g fill="' + p.sc + '" fill-opacity=".07"><path d="M20 32c14-20 36-12 38 8-20 12-36 10-38-8z"/><path d="M82 92c12-16 28-8 30 8-16 10-30 8-30-8z"/></g><path d="M20 32l34 12M82 92l26 10" stroke="' + p.sc + '" stroke-opacity=".1" fill="none"/>'), ts: '120px 120px',
+      deco: corners('<path d="M230 0C196 56 140 100 46 134" fill="none" stroke="' + p.sc + '" stroke-opacity=".55" stroke-width="1.3"/><g fill="' + p.sc + '" fill-opacity=".14" stroke="' + p.sc + '" stroke-opacity=".5"><path d="M186 36c-6-24 8-38 24-38-2 20-8 34-24 38z"/><path d="M146 70c-8-22 4-36 20-38 0 20-4 34-20 38z"/><path d="M104 98c-10-20-2-34 14-38 2 18-2 32-14 38z"/><path d="M168 82c14 2 30 14 32 30-18 0-30-12-32-30z"/></g>', 230),
+      r: '30px 8px 30px 8px', rs: '14px 4px 14px 4px', nr: '26px 6px 26px 6px', bc: al(p.sc, 0.28), sh: '0 22px 44px -30px rgba(0,0,0,.8)',
+      hv: 'translate:0 -4px;border-radius:8px 30px 8px 30px;border-color:' + al(p.sc, 0.55),
+      br: '18px 4px 18px 4px', bh: 'border-radius:4px 18px 4px 18px',
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,' + al(p.sc, 0.5) + ',transparent)', dc: '❧'
+    }; },
+
+    lavender: function (p) { return {
+      gf: 'Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500|Nunito+Sans:wght@300;400;600;700', h: F('Playfair Display', SF), b: F('Nunito Sans'), it: 'italic',
+      atm: [RG('ellipse 55% 22% at 20% 8%', al(p.sc, 0.1)), RG('ellipse 60% 24% at 82% 18%', al(p.pr, 0.16)), RG('ellipse 70% 26% at 40% 100%', al(p.sc, 0.08))],
+      tex: U(40, 24, '<path d="M0 12q10-9 20 0t20 0" fill="none" stroke="' + p.sc + '" stroke-opacity=".07"/>'), ts: '40px 24px',
+      deco: corners('<g fill="none" stroke="' + p.sc + '" stroke-opacity=".5">' + flower(150, 56, 22) + flower(192, 112, 12) + '<path d="M150 80C140 130 100 150 40 160"/></g>', 220),
+      r: '34px', rs: '18px', nr: '26px', bc: al(p.sc, 0.25), sh: '0 26px 50px -32px ' + al(p.pr, 0.7),
+      hv: 'translate:0 -5px;box-shadow:0 30px 54px -30px ' + al(p.pr, 0.8),
+      br: '999px', bh: 'translate:0 -2px;box-shadow:0 14px 28px -14px ' + al(p.pr, 0.8),
+      dv: 'height:8px;background:' + U(24, 8, '<path d="M0 4q6-5 12 0t12 0" fill="none" stroke="' + p.sc + '" stroke-opacity=".5"/>') + ' repeat-x center/24px 8px', dc: '✿'
+    }; },
+
+    academia: function (p) { return {
+      gf: 'Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600|Lora:ital,wght@0,400;0,500;0,600;1,400', h: F('Cormorant Garamond', SF), b: F('Lora', SF), it: 'italic', gr: 0.05,
+      atm: ['radial-gradient(ellipse at 50% 40%,transparent 50%,rgba(0,0,0,.28) 100%)'],
+      tex: U(220, 220, '<filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 .62 0 0 0 0 .47 0 0 0 0 .28 0 0 0 .13 0"/></filter><rect width="220" height="220" filter="url(#n)"/>'), ts: '220px 220px',
+      deco: U(200, 200, '<g transform="rotate(-14 100 100)" fill="none" stroke="' + p.sc + '" stroke-opacity=".5"><circle cx="100" cy="100" r="86" stroke-width="3"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="46"/><text x="100" y="94" text-anchor="middle" font-family="Georgia,serif" font-size="17" fill="' + p.sc + '" fill-opacity=".55" stroke="none">EX LIBRIS</text><text x="100" y="116" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="' + p.sc + '" fill-opacity=".5" stroke="none">S. D. · 2027</text></g>') + ' bottom 28px right 28px/150px 150px no-repeat',
+      r: '3px', rs: '2px', nr: '4px', bc: al(p.sc, 0.5), sh: '0 1px 0 ' + al(p.sc, 0.2) + ',0 22px 36px -26px rgba(0,0,0,.8)',
+      hv: 'border-color:' + al(p.sc, 0.8) + ';outline-color:' + al(p.sc, 0.6) + ';box-shadow:0 1px 0 ' + al(p.sc, 0.3) + ',0 28px 40px -26px rgba(0,0,0,.85)',
+      br: '2px', bx: 'border-color:' + al(p.sc, 0.6), bh: 'box-shadow:inset 0 0 0 3px ' + al(p.sc, 0.3),
+      dv: 'height:5px;background:none;border-top:1px solid ' + al(p.sc, 0.55) + ';border-bottom:1px solid ' + al(p.sc, 0.55), dc: '❦',
+      x: '@C{outline:1px solid ' + al(p.sc, 0.32) + ';outline-offset:-6px}& h1,& h2{letter-spacing:-.01em}&{font-variant-numeric:oldstyle-nums}'
+    }; },
+
+    neon: function (p) { return {
+      gf: 'Orbitron:wght@500;700;800|Space+Grotesk:wght@400;500;600;700', h: F('Orbitron'), b: F('Space Grotesk'), it: 'normal',
+      atm: [RG('ellipse 50% 30% at 90% 0%', al(p.pr, 0.16)), RG('ellipse 50% 30% at 0% 100%', al(p.sc, 0.1))],
+      tex: U(96, 96, '<path d="M48 0V96M0 48H96" fill="none" stroke="' + p.sc + '" stroke-opacity=".06"/><path d="M0 24h22l8 8h26M96 72H70l-8-8H40" fill="none" stroke="' + p.pr + '" stroke-opacity=".16"/><circle cx="56" cy="32" r="2" fill="' + p.pr + '" fill-opacity=".4"/><circle cx="40" cy="64" r="2" fill="' + p.sc + '" fill-opacity=".4"/>'), ts: '96px 96px',
+      deco: corners('<g fill="none" stroke="' + p.pr + '" stroke-opacity=".6" stroke-width="1.5"><path d="M220 20H150l-14 14H90l-10 10"/><path d="M220 50h-30l-10 10"/><circle cx="80" cy="44" r="4"/><circle cx="160" cy="60" r="3" stroke="' + p.sc + '"/></g>', 220),
+      r: '0', rs: '0', nr: '0', cur: '0', bc: al(p.pr, 0.45),
+      sh: 'inset 0 0 0 1px ' + al(p.sc, 0.06) + ',inset 0 0 40px -22px ' + al(p.pr, 0.6),
+      hv: 'translate:0 -2px;border-color:' + al(p.sc, 0.8) + ';box-shadow:inset 0 0 0 1px ' + al(p.sc, 0.25) + ',inset 0 0 36px -12px ' + al(p.pr, 0.7),
+      br: '0', bx: 'clip-path:' + CLIP(9) + ';font-family:var(--f-h);letter-spacing:.05em', bh: 'box-shadow:inset 0 0 16px ' + al(p.pr, 0.7),
+      dv: 'height:1px;background:linear-gradient(90deg,' + p.pr + ',' + p.sc + ',transparent)',
+      x: '@C{clip-path:' + CLIP(20) + '}& h1,& h2,& h3{zoom:.82}& a:focus-visible,& button:focus-visible{outline-offset:-3px}& h1:hover,& .project-card:hover h3,& .surface-secondary:hover h3{animation:tidGlitch .4s steps(2) 1}'
+    }; },
+
+    noir: function (p) { return {
+      gf: 'Bodoni+Moda:ital,wght@0,500;0,700;1,500|Inter:wght@400;500;600', h: F('Bodoni Moda', SF), b: F('Inter'), it: 'italic', gr: 0.1,
+      atm: ['radial-gradient(ellipse 90% 70% at 50% 30%,transparent 45%,rgba(0,0,0,.5) 100%)', 'linear-gradient(180deg,' + al(p.pr, 0.16) + ',transparent 28%)'],
+      deco: corners('<path d="M2 62V2H62" fill="none" stroke="' + p.sc + '" stroke-opacity=".7" stroke-width="2"/>', 64, 4),
+      r: '0', rs: '0', nr: '0', bc: al(p.sc, 0.28), sh: '0 30px 50px -34px #000',
+      hv: 'border-color:' + al(p.pr, 0.9) + ';box-shadow:inset 0 -3px 0 ' + p.pr + ',0 34px 56px -30px #000',
+      br: '0', bx: 'border-color:' + al(p.sc, 0.55) + ';letter-spacing:.04em', bh: 'box-shadow:inset 0 -3px 0 ' + p.sc,
+      dv: 'height:3px;background:linear-gradient(90deg,' + p.pr + ' 0 18%,transparent 18% 100%);border-bottom:1px solid ' + al(p.sc, 0.3),
+      x: '@C{border-left:3px solid ' + p.pr + '}& h1,& h2{letter-spacing:-.02em}'
+    }; },
+
+    arctic: function (p) { return {
+      gf: 'Manrope:wght@400;500;600;700;800|DM+Sans:wght@400;500;700', h: F('Manrope'), b: F('DM Sans'), it: 'normal',
+      atm: ['linear-gradient(180deg,' + al(p.sc, 0.12) + ',transparent 36%)', RG('ellipse 60% 30% at 20% 0%', 'rgba(255,255,255,.05)')],
+      tex: U(160, 160, '<path d="M0 80L80 0L160 80L80 160ZM80 0V160M0 80H160" fill="none" stroke="' + p.sc + '" stroke-opacity=".07"/>'), ts: '160px 160px',
+      deco: corners('<g stroke="' + p.sc + '" stroke-opacity=".55" fill="none" stroke-width="1.2"><path d="M150 56m-44 0h88M150 56m-22 -38l44 76M150 56m22 -38l-44 76"/><path d="M150 36l-8 8M150 36l8 8M150 76l-8-8M150 76l8-8M112 56l8-8M112 56l8 8M188 56l-8-8M188 56l-8 8"/><circle cx="150" cy="56" r="6"/></g>', 220),
+      r: '22px', rs: '12px', nr: '20px', bc: 'rgba(255,255,255,.18)', cbg: al(p.sf, 0.5), cbf: 'blur(18px) saturate(150%)',
+      ci: 'linear-gradient(115deg,transparent 38%,rgba(255,255,255,.09) 50%,transparent 62%)', cs: '300% 100%', cp: '120% 0',
+      sh: 'inset 0 1px 0 rgba(255,255,255,.16),0 22px 44px -30px rgba(0,0,0,.8)',
+      hv: 'background-position:-20% 0;border-color:rgba(168,217,244,.5)',
+      br: '14px', bx: 'border-color:rgba(255,255,255,.22);backdrop-filter:blur(10px)', bh: 'background-color:' + al(p.sc, 0.2),
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent)', dc: '❄'
+    }; },
+
+    rose: function (p) { return {
+      gf: 'Fraunces:ital,wght@0,400;0,600;0,700;1,400|Outfit:wght@300;400;500;600', h: F('Fraunces', SF), b: F('Outfit'), it: 'italic',
+      atm: [RG('ellipse 60% 32% at 12% 0%', al(p.sc, 0.12)), RG('ellipse 50% 30% at 100% 90%', al(p.pr, 0.14))],
+      tex: U(200, 200, '<filter id="b"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 .91 0 0 0 0 .69 0 0 0 0 .76 0 0 0 .08 0"/></filter><rect width="200" height="200" filter="url(#b)"/>'), ts: '200px 200px',
+      deco: corners('<g fill="none" stroke="' + p.sc + '" stroke-opacity=".55" stroke-width="1.2"><path d="M150 60c0-10 12-14 18-6s-2 22-16 22-26-12-24-28 16-30 38-26 36 22 30 42"/><path d="M150 60c6-4 12 0 10 6"/><path d="M122 98C100 130 70 150 30 160"/><path d="M96 128c-14-6-20-18-18-30 14 2 22 12 18 30zM64 148c-12-2-20-10-22-22 12 0 20 8 22 22z" fill="' + p.sc + '" fill-opacity=".1"/></g>', 220),
+      r: '24px', rs: '14px', nr: '22px', bc: 'transparent', sh: '0 24px 46px -32px ' + al(p.pr, 0.8),
+      hv: 'translate:0 -4px;box-shadow:0 28px 46px -28px ' + al(p.sc, 0.5),
+      br: '999px', bx: 'border-color:' + al(p.sc, 0.45), bh: 'box-shadow:0 12px 26px -12px ' + al(p.sc, 0.55),
+      bb: 'linear-gradient(135deg,#B76F8E,#D79BA8 60%,#E5B7A5)',
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,#E8AFC2,#B76F8E,transparent)', dc: '❀',
+      x: '@C{border-color:transparent;background-image:linear-gradient(var(--bg-secondary),var(--bg-secondary)),linear-gradient(135deg,#F2C9B5,#E8AFC2 40%,#B76F8E 75%,#E5B7A5);background-origin:border-box;background-clip:padding-box,border-box}'
+    }; },
+
+    aurora: function (p) { return {
+      gf: 'Outfit:wght@300;400;500;600;700|Inter:wght@400;500;600', h: F('Outfit'), b: F('Inter'), it: 'normal',
+      atm: ['linear-gradient(115deg,transparent 18%,' + al(p.pr, 0.16) + ' 36%,' + al(p.sc, 0.12) + ' 48%,transparent 64%)', 'linear-gradient(72deg,transparent 30%,' + al(p.sc, 0.09) + ' 52%,transparent 74%)', 'linear-gradient(180deg,' + al(p.pr, 0.1) + ',transparent 35%)'],
+      as: '200% 100%,200% 100%,100% 100%',
+      deco: U(600, 120, '<g fill="none"><path d="M0 50C100 10 200 90 300 50S500 10 600 50" stroke="' + p.sc + '" stroke-opacity=".35"/><path d="M0 64C100 24 200 104 300 64S500 24 600 64" stroke="' + p.pr + '" stroke-opacity=".5"/><path d="M0 78C100 38 200 118 300 78S500 38 600 78" stroke="' + p.sc + '" stroke-opacity=".2"/></g>') + ' bottom/600px 120px repeat-x',
+      r: '26px', rs: '14px', nr: '22px', bc: al(p.sc, 0.25), cbg: al(p.sf, 0.58), cbf: 'blur(10px)', sh: '0 26px 50px -34px ' + al(p.pr, 0.8),
+      hv: 'translate:0 -3px;border-color:' + al(p.sc, 0.55) + ';box-shadow:0 0 0 1px ' + al(p.sc, 0.2) + ',0 28px 54px -28px ' + al(p.sc, 0.6),
+      br: '999px', bh: 'box-shadow:0 0 0 1px ' + al(p.sc, 0.5) + ',0 12px 30px -10px ' + al(p.sc, 0.55), bb: 'linear-gradient(120deg,' + p.pr + ',' + p.sc + ')',
+      dv: 'height:2px;background:linear-gradient(90deg,transparent,' + p.pr + ',' + p.sc + ',transparent)',
+      x: '& body{animation:tidDrift 80s ease-in-out infinite alternate}'
+    }; },
+
+    sunset: function (p) { return {
+      gf: 'Bricolage+Grotesque:wght@400;600;700;800|DM+Sans:wght@400;500;700', h: F('Bricolage Grotesque'), b: F('DM Sans'), it: 'normal',
+      atm: [RG('ellipse 60% 26% at 50% 104%', al(p.sc, 0.28)), 'linear-gradient(180deg,transparent 60%,' + al(p.pr, 0.1) + ')', RG('ellipse 70% 30% at 50% 0%', al(p.pr, 0.1))],
+      deco: U(260, 130, '<defs><mask id="m"><rect width="260" height="130" fill="#fff"/><rect y="70" width="260" height="4"/><rect y="86" width="260" height="6"/><rect y="104" width="260" height="8"/></mask></defs><circle cx="130" cy="130" r="112" fill="' + p.pr + '" fill-opacity=".26" mask="url(#m)"/><path d="M0 129.5H260" stroke="' + p.sc + '" stroke-opacity=".5"/>') + ' bottom 0 right 4%/260px 130px no-repeat',
+      r: '26px 26px 10px 10px', rs: '12px', nr: '22px', bc: al(p.sc, 0.28), sh: '0 24px 46px -30px ' + al(p.pr, 0.7),
+      hv: 'translate:0 -4px;box-shadow:0 28px 46px -26px ' + al(p.pr, 0.7),
+      br: '12px', bb: 'linear-gradient(120deg,' + p.pr + ',' + p.sc + ')', bh: 'translate:0 -2px;box-shadow:0 14px 28px -12px ' + al(p.pr, 0.7),
+      dv: 'height:3px;background:repeating-linear-gradient(90deg,' + p.pr + ' 0 18px,transparent 18px 26px);opacity:.7', dc: '☀',
+      x: '@C{border-bottom:3px solid ' + p.pr + '}'
+    }; },
+
+    mono: function (p) { return {
+      gf: 'Inter:wght@400;500;600;700', h: '"Helvetica Neue",Helvetica,Arial,Inter,sans-serif', b: F('Inter'), it: 'normal',
+      tex: U(10, 10, '<path d="M0 0V10" stroke="' + p.tx + '" stroke-opacity=".07"/>'), ts: '8.3334% 100%',
+      deco: corners('<g fill="none" stroke="' + p.tx + '" stroke-opacity=".55" stroke-width="1.4"><circle cx="150" cy="50" r="34"/><path d="M96 50H200M150 0V100"/></g><rect x="144" y="44" width="12" height="12" fill="' + p.pr + '" fill-opacity=".9"/>', 200),
+      r: '0', rs: '0', nr: '0', bc: p.tx, sh: 'none', hv: 'translate:-3px -3px;box-shadow:6px 6px 0 ' + p.tx,
+      br: '0', bx: 'border:1px solid ' + p.tx, bh: 'translate:-2px -2px;box-shadow:3px 3px 0 ' + p.tx,
+      dv: 'height:2px;background:' + p.tx, x: '& h1,& h2{letter-spacing:-.035em;font-weight:700}'
+    }; },
+
+    cosmic: function (p) { return {
+      gf: 'Space+Grotesk:wght@400;500;600;700|Exo+2:wght@300;400;500;600', h: F('Space Grotesk'), b: F('Exo 2'), it: 'normal',
+      atm: [RG('ellipse 55% 38% at 12% 8%', al(p.pr, 0.24)), RG('ellipse 45% 34% at 92% 62%', al(p.sc, 0.12)), RG('ellipse 40% 26% at 50% 100%', al(p.pr, 0.12))],
+      tex: U(300, 300, stars(p)), ts: '300px 300px',
+      deco: corners('<g fill="none" stroke="' + p.sc + '" stroke-opacity=".42"><ellipse cx="160" cy="70" rx="72" ry="26" transform="rotate(-24 160 70)"/><ellipse cx="160" cy="70" rx="48" ry="16" transform="rotate(32 160 70)" stroke-opacity=".3"/><circle cx="160" cy="70" r="104" stroke-opacity=".12"/></g><circle cx="160" cy="70" r="6" fill="' + p.pr + '" fill-opacity=".9"/><circle cx="224" cy="48" r="3.4" fill="' + p.sc + '"/><circle cx="118" cy="86" r="2.4" fill="' + p.tx + '" fill-opacity=".8"/>', 230),
+      r: '16px', rs: '10px', nr: '18px', bc: al(p.sc, 0.26), cbg: al(p.sf, 0.7), cbf: 'blur(8px)', sh: '0 24px 50px -32px ' + p.pr,
+      hv: 'border-color:' + al(p.sc, 0.7) + ';box-shadow:0 0 0 1px ' + al(p.sc, 0.22) + ',0 26px 54px -28px ' + p.pr,
+      br: '8px', bh: 'border-color:' + p.sc + ';box-shadow:0 0 0 1px ' + al(p.sc, 0.4),
+      dv: 'height:1px;background:linear-gradient(90deg,transparent,' + al(p.sc, 0.55) + ',transparent)', dc: '✧'
+    }; },
+
+    zen: function (p) { return {
+      gf: 'Noto+Serif:ital,wght@0,400;0,600;0,700;1,400|Noto+Sans:wght@300;400;500;600', h: F('Noto Serif', SF), b: F('Noto Sans'), it: 'italic', gr: 0.04,
+      atm: ['linear-gradient(180deg,' + al(p.sc, 0.06) + ',transparent 30%)'],
+      tex: U(260, 260, '<filter id="f"><feTurbulence type="fractalNoise" baseFrequency=".012 .6" numOctaves="3" seed="2"/><feColorMatrix values="0 0 0 0 .94 0 0 0 0 .94 0 0 0 0 .86 0 0 0 .07 0"/></filter><rect width="260" height="260" filter="url(#f)"/>'), ts: '260px 260px',
+      deco: U(220, 220, '<path d="M110 24A86 86 0 1 0 190 126" fill="none" stroke="' + p.tx + '" stroke-opacity=".3" stroke-width="9" stroke-linecap="round"/><path d="M114 30A80 80 0 1 0 186 120" fill="none" stroke="' + p.tx + '" stroke-opacity=".18" stroke-width="3" stroke-linecap="round"/>') + ' bottom 10px left 10px/180px 180px no-repeat,' +
+        U(200, 200, '<g fill="none" stroke="' + p.tx + '" stroke-opacity=".38" stroke-width="2.5" stroke-linecap="round"><path d="M200 20C150 40 110 80 70 150"/><path d="M150 44l-26-12M126 74l-30-4M104 104l-24 8"/></g><g fill="' + p.sc + '" fill-opacity=".45"><ellipse cx="122" cy="32" rx="12" ry="4" transform="rotate(20 122 32)"/><ellipse cx="94" cy="70" rx="12" ry="4" transform="rotate(10 94 70)"/><ellipse cx="76" cy="110" rx="12" ry="4" transform="rotate(30 76 110)"/></g>') + ' top 70px right 0/180px 180px no-repeat',
+      r: '4px', rs: '3px', nr: '6px', bc: al(p.sc, 0.3), sh: '0 16px 30px -24px rgba(0,0,0,.7)',
+      hv: 'border-color:' + al(p.sc, 0.6) + ';box-shadow:inset 0 -4px 0 -1px ' + al(p.pr, 0.9) + ',0 18px 30px -22px rgba(0,0,0,.7)',
+      br: '3px', bh: 'box-shadow:inset 0 -3px 0 ' + al(p.sc, 0.9),
+      dv: 'height:6px;background:' + U(240, 6, '<path d="M0 3C40 0 80 6 120 3S200 1 240 3" fill="none" stroke="' + p.sc + '" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/>') + ' repeat-x center/240px 6px'
+    }; },
+
+    pixel: function (p) { return {
+      gf: 'Press+Start+2P|VT323', h: F('Press Start 2P', 'monospace'), b: F('VT323', 'monospace'), s: F('VT323', 'monospace'), it: 'normal', fw: 400,
+      atm: ['linear-gradient(180deg,' + al(p.pr, 0.08) + ',transparent 30%)'],
+      tex: U(16, 16, '<path d="M16 0H0V16" fill="none" stroke="' + p.sc + '" stroke-opacity=".08" shape-rendering="crispEdges"/><rect width="2" height="2" fill="' + p.pr + '" fill-opacity=".25"/>'), ts: '16px 16px',
+      deco: U(70, 60, px(['.XX.XX.', 'XXXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...'], p.pr, 8)) + ' top 90px right 28px/70px 60px no-repeat,' +
+        U(72, 56, px(['..X.....X..', '...X...X...', '..XXXXXXX..', '.XX.XXX.XX.', 'XXXXXXXXXXX', 'X.XXXXXXX.X', 'X.X.....X.X', '...XX.XX...'], p.sc, 6)) + ' bottom 28px left 28px/72px 56px no-repeat',
+      r: '0', rs: '0', nr: '0', cur: '0', bc: p.tx, sh: '6px 6px 0 rgba(0,0,0,.55)', pv: 'font-size:.58rem;line-height:1.5',
+      hv: 'translate:-2px -2px;box-shadow:8px 8px 0 rgba(0,0,0,.55)',
+      br: '0', bx: 'border:3px solid ' + p.tx + ';box-shadow:4px 4px 0 rgba(0,0,0,.6);font-family:var(--f-h);font-size:.6rem;line-height:1.6', bh: 'translate:2px 2px;box-shadow:2px 2px 0 rgba(0,0,0,.6)',
+      dv: 'height:4px;background:repeating-linear-gradient(90deg,' + p.pr + ' 0 8px,transparent 8px 16px)', dc: '♥',
+      x: '&{font-size:17px;font-size-adjust:.5}@C{border-top:14px solid ' + p.pr + '}& *{border-radius:0!important}& body::before{image-rendering:pixelated}' +
+        '& h1,& h2,& h3,& h4,& .font-display,& .btn-royal,& .btn-outline{font-size-adjust:none}& h1,& h2,& h3{zoom:.56;line-height:1.5}& h4,& .font-display:not(h1):not(h2):not(h3){zoom:.72}& h1 .font-serif,& h2 .font-serif{font-family:var(--f-h)}'
+    }; }
+  };
+
+  /* ---------- CSS generation ---------- */
+  var CARDS = ['.surface-secondary:not(.rounded-full)', '.project-card', '.reads-shelf-wrap'];
+  function pal(id) { var c = T.get(id).colors; return { bg: c[0], sf: c[1], pr: c[2], sc: c[3], tx: c[4] }; }
+
+  function build(id) {
+    var t = IDENT[id](pal(id)), Q = 'html[data-theme="' + id + '"]';
+    var C = function (s, nb) { return CARDS.map(function (k) { return Q + ' ' + k + (nb ? ':not([class*="border-t-"])' : '') + (s || ''); }).join(','); };
+    var o = Q + '{font-family:var(--f-b);--f-h:' + t.h + ';--f-b:' + t.b + ';--f-s:' + (t.s || t.h) + ';--f-l:' + (t.l || t.b) + ';--font-display:var(--f-h);--font-serif:var(--f-s);--id-it:' + (t.it || 'italic') + ';--c-r:' + t.r + ';--c-rs:' + (t.rs || '12px') + ';--b-r:' + t.br + '}';
+
+    /* typography */
+    o += Q + ' .font-sans{font-family:var(--f-b)}' + Q + ' .font-display,' + Q + ' h1,' + Q + ' h2,' + Q + ' h3,' + Q + ' h4,' + Q + ' .sp-title,' + Q + ' .bm-title{font-family:var(--f-h)}';
+    o += Q + ' .font-serif,' + Q + ' .bk-art b{font-family:var(--f-s)}' + Q + ' .italic{font-style:var(--id-it)}';
+    o += ['.font-mono', '.sp-kicker', '.sp-label', '.th-chip', '.th-cat', '.reads-chip', '.book-status', '.bm-status', '.bm-block h4', '.bm-rating small', '.bk-art i'].map(function (k) { return Q + ' ' + k; }).join(',') + '{font-family:var(--f-l)}';
+    if (t.fw) o += [' h1', ' h2', ' h3', ' h4', ' .font-display', ' .font-serif'].map(function (k) { return Q + k; }).join(',') + '{font-weight:' + t.fw + '}';
+
+    /* atmosphere + texture on the page background */
+    var im = [], at = [], sz = [], as = (t.as || '').split(',');
+    (t.atm || []).forEach(function (g, i) { im.push(g); at.push('fixed'); sz.push(as[i] || 'auto'); });
+    if (t.tex) { im.push(t.tex); at.push('scroll'); sz.push(t.ts || 'auto'); }
+    if (im.length) o += Q + ' body{background-image:' + im.join(',') + ';background-attachment:' + at.join(',') + ';background-size:' + sz.join(',') + '}';
+    o += Q + ' .noise-overlay{opacity:' + (t.gr || 0.025) + '}' + Q + ' .ambient-orb{display:none}';
+    o += Q + ' body::before{content:"";position:fixed;inset:0;z-index:39;pointer-events:none;background:' + t.deco + ';opacity:.8}' + Q + ' body.no-decor::before{display:none}';
+
+    /* cards, chips, panels */
+    o += C() + '{border-radius:var(--c-r);box-shadow:' + t.sh + ';' + (t.cbg ? 'background-color:' + t.cbg + ';' : '') + (t.cbf ? 'backdrop-filter:' + t.cbf + ';-webkit-backdrop-filter:' + t.cbf + ';' : '') +
+      (t.ci ? 'background-image:' + t.ci + ';background-size:' + t.cs + ';background-position:' + t.cp + ';' : '') +
+      'transition:translate .35s cubic-bezier(.16,1,.3,1),box-shadow .35s,border-color .35s,border-radius .45s,outline-color .35s,outline-offset .35s,background-position .9s}';
+    o += C('', true) + '{border-color:' + t.bc + '}';
+    o += C(':hover') + '{' + t.hv + '}';
+    o += Q + ' .surface-primary.border-subtle:not(.fixed){border-radius:var(--c-rs)}';
+    o += Q + ' .settings-panel,' + Q + ' .bm-panel{border-radius:min(var(--c-rs),22px)}' + Q + ' .nav-shell{border-radius:' + (t.nr || '16px') + '}';
+    o += Q + ' .custom-cursor-ring,' + Q + ' .custom-cursor-dot{border-radius:' + (t.cur || '50%') + '}';
+
+    /* buttons + chips */
+    var BT = Q + ' .btn-royal:not(.rounded-full),' + Q + ' .btn-outline:not(.rounded-full),' + Q + ' .reads-chip,' + Q + ' .th-chip';
+    var BH = Q + ' .btn-royal:not(.rounded-full):hover,' + Q + ' .btn-outline:not(.rounded-full):hover,' + Q + ' .reads-chip:hover';
+    o += BT + '{border-radius:var(--b-r);' + (t.bx || '') + '}' + BH + '{' + (t.bh || '') + '}';
+    o += Q + ' .btn-royal{transition-property:transform,translate,box-shadow,border-color,border-radius,background}';
+    if (t.bb) o += Q + ' .btn-royal{background:' + t.bb + '}';
+
+    /* dividers */
+    o += Q + ' .editorial-divider{' + t.dv + '}';
+    if (t.dc) o += Q + ' .editorial-divider{position:relative;overflow:visible}' + Q + ' .editorial-divider::after{content:"' + t.dc + '";position:absolute;left:50%;top:50%;translate:-50% -50%;padding:0 .9rem;background:var(--bg-primary);color:var(--accent-lavender);line-height:1;font-size:15px}';
+
+    /* picker preview uses the theme's own heading font (loaded on hover/focus) */
+    o += '.th-card[data-id="' + id + '"] .th-name{font-family:' + t.h + ';' + (t.pv || '') + '}';
+
+    /* theme-specific extras */
+    if (t.x) o += t.x.replace(/@C(:[a-z-]+)?/g, function (m, s) { return C(s || ''); }).replace(/&/g, Q);
+
+    /* small screens + motion preferences */
+    o += '@media(max-width:640px){' + Q + ' body::before{display:none}}';
+    o += '@media(prefers-reduced-motion:reduce){' + Q + ' body,' + Q + ' h1,' + Q + ' h3{animation:none!important}' + C() + '{transition:none!important}}';
+    o += Q + ' body.calm{animation:none!important}';
+    return o;
+  }
+
+  var css = T.list.filter(function (t) { return IDENT[t.id]; }).map(function (t) { return build(t.id); }).join('\n');
+  var style = document.createElement('style');
+  style.id = 'theme-identities-css';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  /* ---------- lazy font loading (only the active theme's fonts; others on hover/focus) ---------- */
+  var loaded = {};
+  function loadFonts(id) {
+    var d = IDENT[id];
+    if (!d || loaded[id]) return;
+    loaded[id] = 1;
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?' + d(pal(id)).gf.split('|').map(function (f) { return 'family=' + f; }).join('&') + '&display=swap';
+    document.head.appendChild(l);
+  }
+  loadFonts(document.documentElement.getAttribute('data-theme'));
+  window.addEventListener('themechange', function (e) { loadFonts(e.detail && e.detail.id); });
+  function warm(e) { var c = e.target.closest && e.target.closest('.th-card'); if (c) loadFonts(c.dataset.id); }
+  document.addEventListener('pointerover', warm, { passive: true });
+  document.addEventListener('focusin', warm);
+
+  T.identities = IDENT;
+})();
+  </script>
 </head>
 <body class="selection:bg-royalViolet selection:text-softSilver">
 
