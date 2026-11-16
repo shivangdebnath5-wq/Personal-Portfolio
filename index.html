@@ -677,6 +677,40 @@
 })();
 
   </script>
+  <style id="swot-css">
+    /* SWOT section — colours come from the active theme's variables */
+    .swot-grid{display:grid;grid-template-columns:1fr;gap:1.25rem}
+    @media(min-width:768px){.swot-grid{grid-template-columns:1fr 1fr;gap:1.5rem}}
+    .swot-axis{grid-column:1/-1;display:flex;align-items:center;gap:.75rem;font:500 .72rem/1 ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
+    .swot-axis::after{content:"";flex:1;height:1px;background:var(--border-muted)}
+    .swot-axis:not(:first-child){margin-top:.75rem}
+    .swot-card{position:relative;overflow:hidden;padding:1.75rem 1.5rem 1.5rem;background:var(--bg-secondary);border:1px solid var(--border-muted);border-radius:20px;transition:translate .35s cubic-bezier(.16,1,.3,1),box-shadow .35s,border-color .35s}
+    .swot-card:hover{translate:0 -4px;border-color:var(--swot-c)}
+    .swot-card::before{content:"";position:absolute;pointer-events:none}
+    .swot-card>:not(.swot-letter){position:relative;z-index:1}
+    .swot-letter{position:absolute;right:1.1rem;top:-.5rem;font:800 7.5rem/1 var(--font-display,inherit);color:var(--swot-c);opacity:.08;pointer-events:none;user-select:none}
+    .swot-head{display:flex;align-items:center;gap:.85rem;margin-bottom:1.1rem}
+    .swot-icon{flex:none;width:2.6rem;height:2.6rem;display:grid;place-items:center;border-radius:12px;color:var(--swot-c);background:color-mix(in srgb,var(--swot-c) 14%,transparent);border:1px solid color-mix(in srgb,var(--swot-c) 38%,transparent)}
+    .swot-icon svg{width:1.25rem;height:1.25rem}
+    .swot-title{margin:0;font-weight:700;font-size:1.4rem;line-height:1.1;color:var(--text-primary)}
+    .swot-sub{display:block;margin-top:.3rem;font:500 .72rem/1.2 ui-monospace,monospace;color:var(--text-muted)}
+    .swot-list{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
+    .swot-list li{display:flex;gap:.7rem;font-size:.95rem;line-height:1.55;color:var(--text-secondary)}
+    .swot-list li::before{content:var(--swot-mark);flex:none;width:1rem;text-align:center;font-weight:700;color:var(--swot-c)}
+    /* Strengths: solid card, bright top bar */
+    .swot-s{--swot-c:var(--accent-lavender);--swot-mark:"✓"}
+    .swot-s::before{left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--swot-c),transparent)}
+    /* Weaknesses: dashed "work in progress" card with faint stripes */
+    .swot-w{--swot-c:var(--text-secondary);--swot-mark:"○";border-style:dashed}
+    .swot-w::before{inset:0;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--swot-c) 7%,transparent) 0 2px,transparent 2px 14px)}
+    /* Opportunities: glowing corner */
+    .swot-o{--swot-c:color-mix(in srgb,var(--accent-royal) 55%,var(--accent-lavender));--swot-mark:"↗"}
+    .swot-o::before{inset:0;background:radial-gradient(circle at 100% 0,color-mix(in srgb,var(--swot-c) 24%,transparent),transparent 58%)}
+    /* Threats: warning-tinted card with a thick left edge */
+    .swot-t{--swot-c:color-mix(in srgb,var(--accent-royal) 40%,#f0a04b);--swot-mark:"!"}
+    .swot-t::before{left:0;top:0;bottom:0;width:5px;background:var(--swot-c)}
+    @media(prefers-reduced-motion:reduce){.swot-card{transition:none}.swot-card:hover{translate:none}}
+  </style>
   <!-- ==========================================================================
        THEME IDENTITIES — visual identity layer on top of the colour registry.
        The registry above owns the five HEX colours; this block owns everything
@@ -926,7 +960,7 @@
   };
 
   /* ---------- CSS generation ---------- */
-  var CARDS = ['.surface-secondary:not(.rounded-full)', '.project-card', '.reads-shelf-wrap'];
+  var CARDS = ['.surface-secondary:not(.rounded-full)', '.project-card', '.reads-shelf-wrap', '.swot-card'];
   function pal(id) { var c = T.get(id).colors; return { bg: c[0], sf: c[1], pr: c[2], sc: c[3], tx: c[4] }; }
 
   function build(id) {
@@ -1067,6 +1101,7 @@
         <a href="#projects" class="nav-link" data-section="projects">My Projects</a>
         <a href="#interests" class="nav-link" data-section="interests">My Interests</a>
         <a href="#reads" class="nav-link" data-section="reads">My Reads</a>
+        <a href="#swot" class="nav-link" data-section="swot">My SWOT</a>
         <a href="#learning" class="nav-link" data-section="learning">What I'm Learning</a>
       </nav>
 
@@ -1197,8 +1232,11 @@
       <a href="#reads" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
         <span>My Reads</span><span class="font-mono text-xs text-mute">06</span>
       </a>
+      <a href="#swot" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
+        <span>My SWOT</span><span class="font-mono text-xs text-mute">07</span>
+      </a>
       <a href="#learning" class="mobile-nav-link font-serif text-3xl text-main flex items-center justify-between py-1">
-        <span>What I'm Learning</span><span class="font-mono text-xs text-mute">07</span>
+        <span>What I'm Learning</span><span class="font-mono text-xs text-mute">08</span>
       </a>
     </div>
 
@@ -1761,7 +1799,101 @@
     <div class="editorial-divider"></div>
 
     <!-- ==========================================================================
-         SECTION 6: WHAT I'M LEARNING — STUDENT LEARNING NOTEBOOK
+         SECTION 6: MY SWOT ANALYSIS
+         Static content: edit the text inside each <li> below to change it.
+         ========================================================================== -->
+    <section id="swot" class="py-24 sm:py-32 px-4 sm:px-8 relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+          <div>
+            <p class="font-mono text-xs accent-lavender-text mb-2">06 • My SWOT</p>
+            <h2 class="font-display font-bold text-3xl sm:text-5xl text-main tracking-tight">A Quick Look At Me.</h2>
+          </div>
+          <p class="text-sub text-sm sm:text-base max-w-lg">
+            A SWOT is a simple way to look at yourself honestly: what I do well, what I need to improve, what I can try next, and what could get in my way.
+          </p>
+        </div>
+
+        <div class="swot-grid">
+          <p class="swot-axis">Inside me</p>
+
+        <article class="swot-card swot-s">
+          <span class="swot-letter" aria-hidden="true">S</span>
+          <div class="swot-head">
+            <span class="swot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.4 6.7L12 17.5l-6.1 3.4 1.4-6.7-5-4.7 6.8-.8L12 2.5z"/></svg></span>
+            <div>
+              <h3 class="swot-title font-display">Strengths</h3>
+              <span class="swot-sub">What I’m good at</span>
+            </div>
+          </div>
+          <ul class="swot-list">
+            <li>I’m very curious and love figuring out how websites and apps work.</li>
+            <li>I build real projects from my own ideas instead of just copying templates.</li>
+            <li>I care about clean, simple designs that are easy to use.</li>
+            <li>I keep learning by practising and reading books about coding.</li>
+          </ul>
+        </article>
+
+        <article class="swot-card swot-w">
+          <span class="swot-letter" aria-hidden="true">W</span>
+          <div class="swot-head">
+            <span class="swot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span>
+            <div>
+              <h3 class="swot-title font-display">Weaknesses</h3>
+              <span class="swot-sub">What I’m still working on</span>
+            </div>
+          </div>
+          <ul class="swot-list">
+            <li>I’m still a student, so some of my code isn’t as neat as I want it to be.</li>
+            <li>I can spend too long on tiny design details.</li>
+            <li>I know less about backend and databases than I do about the front end.</li>
+            <li>I start many ideas, and finishing them takes me a while.</li>
+          </ul>
+        </article>
+
+          <p class="swot-axis">Around me</p>
+
+        <article class="swot-card swot-o">
+          <span class="swot-letter" aria-hidden="true">O</span>
+          <div class="swot-head">
+            <span class="swot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></span>
+            <div>
+              <h3 class="swot-title font-display">Opportunities</h3>
+              <span class="swot-sub">Chances I can grab</span>
+            </div>
+          </div>
+          <ul class="swot-list">
+            <li>I can learn more JavaScript and try frameworks like React.</li>
+            <li>I can share my projects online and get feedback from other builders.</li>
+            <li>I can join school tech clubs, hackathons and online communities.</li>
+            <li>I can build projects that help local shops and workers, like KaamSetu and DukaanOS.</li>
+          </ul>
+        </article>
+
+        <article class="swot-card swot-t">
+          <span class="swot-letter" aria-hidden="true">T</span>
+          <div class="swot-head">
+            <span class="swot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l9.5 16.5h-19L12 3.5z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg></span>
+            <div>
+              <h3 class="swot-title font-display">Threats</h3>
+              <span class="swot-sub">Things that could slow me down</span>
+            </div>
+          </div>
+          <ul class="swot-list">
+            <li>Technology changes fast, so it’s easy to feel like I’m falling behind.</li>
+            <li>Homework and exams can take time away from building.</li>
+            <li>Comparing myself with experienced developers can hurt my confidence.</li>
+            <li>Relying too much on tutorials or AI tools could stop me from really understanding the code.</li>
+          </ul>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="editorial-divider"></div>
+
+    <!-- ==========================================================================
+         SECTION 7: WHAT I'M LEARNING — STUDENT LEARNING NOTEBOOK
          ========================================================================== -->
     <section id="learning" class="py-24 sm:py-32 px-4 sm:px-8 relative">
       <div class="chrome-deco cd-blue" style="right:4%;top:6%;--cw:80;--dur:13s;--sdur:95s;--dir:reverse;--delay:1.8s" aria-hidden="true"></div>
@@ -1769,7 +1901,7 @@
         
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
           <div>
-            <p class="font-mono text-xs accent-lavender-text mb-2">06 • What I'm Learning</p>
+            <p class="font-mono text-xs accent-lavender-text mb-2">07 • What I'm Learning</p>
             <h2 class="font-display font-bold text-3xl sm:text-5xl text-main tracking-tight">
               Current Projects &amp; Practice.
             </h2>
@@ -3483,6 +3615,7 @@
             { label: 'Go to My Projects', action: () => { location.hash = '#projects'; } },
             { label: 'Go to My Interests (Technology, Design & Music)', action: () => { location.hash = '#interests'; } },
             { label: 'Go to My Favourite Reads', action: () => { location.hash = '#reads'; } },
+            { label: 'Go to My SWOT', action: () => { location.hash = '#swot'; } },
             { label: "Go to What I'm Learning", action: () => { location.hash = '#learning'; } },
             { label: 'Switch Theme (Dark / Light)', action: toggleTheme },
             { label: 'Toggle Edit Text Mode (Shortcut: E)', action: toggleEditMode },
