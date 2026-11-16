@@ -2239,6 +2239,33 @@
       /* Load persisted state or fallback to defaults */
       let timelineData = loadFromStorage(STORAGE_KEY_TIMELINE, defaultTimelineData);
       let projectsData = loadFromStorage(STORAGE_KEY_PROJECTS, defaultProjectsData);
+
+      /* ------------------------------------------------------------------
+         PROJECT LINKS — edit these in code (they are NOT stored in the browser).
+         Key = project id.  demo = live website link, repo = GitHub link (optional).
+         Projects without a demo link show a disabled "Link coming soon" button.
+         ------------------------------------------------------------------ */
+      const PROJECT_LINKS = {
+        'nexora-chat':         { demo: 'https://shivangdebnath5-wq.github.io/NexoraChat/', repo: '' },
+        'virtual-supermarket': { demo: '', repo: '' },
+        'waretrack':           { demo: '', repo: '' },
+        'raasta':              { demo: '', repo: '' },
+        'kaam-setu':           { demo: '', repo: '' },
+        'vyapix-dukaanos':     { demo: '', repo: '' }
+      };
+      /* Code always wins over anything saved in the browser, so shared visitors see the same links */
+      projectsData.forEach(p => {
+        const l = PROJECT_LINKS[p.id] || {};
+        p.demoUrl = l.demo || '';
+        p.repoUrl = l.repo || '';
+      });
+
+      function projectOpenLink(p, cls) {
+        const url = p.demoUrl || p.repoUrl;
+        return url
+          ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${cls} inline-flex items-center justify-center gap-2" aria-label="Open ${p.title} in a new tab"><span>Open Project</span><span aria-hidden="true">↗</span></a>`
+          : `<span class="${cls} inline-flex items-center justify-center gap-2 opacity-50 cursor-not-allowed" aria-disabled="true"><span>Link coming soon</span></span>`;
+      }
       let isEditMode = false;
 
       function loadFromStorage(key, fallback) {
@@ -2617,9 +2644,10 @@
                   </div>
                 </div>
 
-                <div class="pt-4 border-t border-subtle">
-                  <button type="button" data-open-project="${flagship.id}" class="btn-royal w-full py-3.5 px-5 rounded-xl text-xs font-mono flex items-center justify-center gap-2">
-                    <span>View Project Details</span>
+                <div class="pt-4 border-t border-subtle grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  ${projectOpenLink(flagship, 'btn-royal w-full py-3.5 px-5 rounded-xl text-xs font-mono')}
+                  <button type="button" data-open-project="${flagship.id}" class="btn-outline w-full py-3.5 px-5 rounded-xl text-xs font-mono flex items-center justify-center gap-2">
+                    <span>View Details</span>
                     <span>→</span>
                   </button>
                 </div>
@@ -2669,12 +2697,12 @@
               </div>
             </div>
 
-            <div class="px-6 sm:px-7 pb-6 pt-3 border-t border-subtle flex items-center justify-between">
+            <div class="px-6 sm:px-7 pb-6 pt-4 border-t border-subtle flex flex-wrap items-center justify-between gap-3">
               <button type="button" data-open-project="${proj.id}" class="font-mono text-xs accent-lavender-text hover:underline flex items-center gap-2">
-                <span>View Project Details</span>
+                <span>View Details</span>
                 <span>→</span>
               </button>
-              <span class="font-mono text-xs text-mute">Click to read more</span>
+              ${projectOpenLink(proj, 'btn-royal px-4 py-2.5 rounded-xl text-xs font-mono')}
             </div>
           </article>
         `).join('');
@@ -2771,20 +2799,6 @@
             </div>
           </div>
 
-          <!-- Optional Project Links (Demo / Code) -->
-          <div class="surface-primary p-6 rounded-xl border border-subtle flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <span class="font-mono text-xs accent-lavender-text block">Project Links (Optional)</span>
-              <p class="text-xs text-mute">Add a live link or GitHub link if you want to open this project in a new tab:</p>
-            </div>
-            <div class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-              <input type="url" placeholder="https://live-demo-link..." data-cs-url="${projIndex}:demoUrl" value="${proj.demoUrl || ''}" class="px-3 py-2 rounded-lg surface-secondary border border-subtle font-mono text-xs text-main" />
-              <input type="url" placeholder="https://github.com/..." data-cs-url="${projIndex}:repoUrl" value="${proj.repoUrl || ''}" class="px-3 py-2 rounded-lg surface-secondary border border-subtle font-mono text-xs text-main" />
-              <button type="button" data-launch-url="${projIndex}" class="btn-royal px-4 py-2 rounded-lg text-xs font-mono whitespace-nowrap">
-                Open Link ↗
-              </button>
-            </div>
-          </div>
         `;
 
         modal.classList.remove('hidden');
@@ -2861,27 +2875,6 @@
           });
         }
 
-        bodyEl.querySelectorAll('[data-cs-url]').forEach(input => {
-          input.addEventListener('change', () => {
-            const [pIdx, key] = input.getAttribute('data-cs-url').split(':');
-            projectsData[Number(pIdx)][key] = input.value.trim();
-            saveToStorage(STORAGE_KEY_PROJECTS, projectsData);
-            showToast('Saved project link');
-          });
-        });
-
-        const launchBtn = bodyEl.querySelector('[data-launch-url]');
-        if (launchBtn) {
-          launchBtn.addEventListener('click', () => {
-            const pIdx = Number(launchBtn.getAttribute('data-launch-url'));
-            const targetUrl = projectsData[pIdx].demoUrl || projectsData[pIdx].repoUrl;
-            if (targetUrl) {
-              window.open(targetUrl, '_blank', 'noopener,noreferrer');
-            } else {
-              showToast('Paste a link in one of the boxes first.');
-            }
-          });
-        }
       }
 
       function closeCaseStudyModal() {
